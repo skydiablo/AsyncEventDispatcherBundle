@@ -23,7 +23,7 @@
   },
   "autoload": {
     "psr-4": {
-      "skydiablo\\AsyncEventDispatcherBundle\\": "src/"
+      "AsyncEventDispatcherBundle": ""
     }
   },
   "autoload-dev": {
