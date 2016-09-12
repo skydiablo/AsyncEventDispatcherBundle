@@ -1,0 +1,22 @@
+services:
+    #============ DISPATCHER =============
+    async_event_dispatcher:
+        class: AsyncEventDispatcherBundle\EventDispatcher\AsyncEventDispatcher
+        arguments:
+            - '@service_container'
+
+    async_collector_event_dispatcher:
+        class: AsyncEventDispatcherBundle\EventDispatcher\AsyncCollectorEventDispatcher
+        arguments:
+            - ~ #queue: override by AsyncEventDispatcherExtension
+            - '@service_container'
+            - '@async_event_dispatcher'
+            - '@async_event_dispatcher.serializer_manager.container_aware_event_serializer_manager'
+            - '@logger'
+
+    # override SF EventDispatcher with this alias to our new AsyncCollectorEventDispatcher
+    event_dispatcher: '@async_collector_event_dispatcher'
+
+    #============ SERIALIZER =============
+    async_event_dispatcher.serializer_manager.container_aware_event_serializer_manager:
+        class: AsyncEventDispatcherBundle\Serializer\Manager\ContainerAwareEventSerializerManager
