@@ -68,7 +68,7 @@ D) Usage
        
    this command will handle 5 events in this run, default are 10 events.
    
-thats is!  
+thats it!  
 
 E) Extra
 ----------------------
