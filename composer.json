@@ -1,0 +1,41 @@
+{
+  "name": "skydiablo/AsyncEventDispatcherBundle",
+  "description": "Handle all your events in an asyncron way",
+  "keywords": [
+    "event",
+    "async",
+    "symfony",
+    "bundle"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Volker von Hoesslin",
+      "email": "volker.von.hoesslin@gmx.de"
+    }
+  ],
+  "require": {
+    "php": ">=7.0",
+    "aws/aws-sdk-php": "^3.19",
+    "symfony/event-dispatcher": "^3.1"
+  },
+  "require-dev": {
+  },
+  "autoload": {
+    "psr-4": {
+      "skydiablo\\AsyncEventDispatcherBundle\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+    }
+  },
+  "config": {
+    "bin-dir": "bin"
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0-dev"
+    }
+  }
+}
