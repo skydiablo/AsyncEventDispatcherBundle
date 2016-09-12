@@ -110,7 +110,7 @@ there are some simple solutions:
                  class: AppBundle\EventListener\ExceptionListener
                  tags:
                      # set "async-request" to "true/false"
-                     - { name: kernel.event_listener, event: kernel.exception, async-request: true }
+                     - { name: kernel.event_listener.async, event: kernel.exception, async-request: true }
                      
                      
 at the other hand, maybe there is no way to handle an event async? just implement this interface:
