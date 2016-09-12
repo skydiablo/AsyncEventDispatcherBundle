@@ -64,7 +64,8 @@ D) Usage
   for now on, all you listener/subscriber as tagged for async handling will run in an async scope. beware, events without serializer will be ignored and never handled!   
  * the core of the async event handling is an CLI command. run this command in an cycle interval (like cronjob):
 
-       $ php bin/console async_event_dispatcher --iterate-amount 5
+            $ php bin/console async_event_dispatcher --iterate-amount 5
+       
    this command will handle 5 events in this run, default are 10 events.
    
 thats is!  
