@@ -53,20 +53,22 @@ D) Usage
 * publish your event serializer
   * for simple and static events, just use the `GenericEventSerializer`. define your serializer for events like this way:
     
-        services:
-            your_custom_serializer:
-                class: AsyncEventDispatcherBundle\Serializer\GenericEventSerializer
-                tags:
-                    - { name: async_event_serializer, event: your_simple_event_name }
+            services:
+                your_custom_serializer:
+                    class: AsyncEventDispatcherBundle\Serializer\GenericEventSerializer
+                    tags:
+                        - { name: async_event_serializer, event: your_simple_event_name }
+
   * a more tricky event with complex objects in it or doctrine entitys, needs a custom event serializer. it is in your hand how to serialize and deserialize the event data. create your serializer and implement `AsyncEventDispatcherBundle\Serializer\EventSerializerInterface` interface. define this new serializer in known style. 
               
   for now on, all you listener/subscriber as tagged for async handling will run in an async scope. beware, events without serializer will be ignored and never handled!   
  * the core of the async event handling is an CLI command. run this command in an cycle interval (like cronjob):
 
-       $ php bin/console async_event_dispatcher --iterate-amount 5
+            $ php bin/console async_event_dispatcher --iterate-amount 5
+       
    this command will handle 5 events in this run, default are 10 events.
    
-thats is!  
+thats it!  
 
 E) Extra
 ----------------------
@@ -108,7 +110,7 @@ there are some simple solutions:
                  class: AppBundle\EventListener\ExceptionListener
                  tags:
                      # set "async-request" to "true/false"
-                     - { name: kernel.event_listener, event: kernel.exception, async-request: true }
+                     - { name: kernel.event_listener.async, event: kernel.exception, async-request: true }
                      
                      
 at the other hand, maybe there is no way to handle an event async? just implement this interface:
