@@ -1,5 +1,5 @@
 {
-  "name": "skydiablo/AsyncEventDispatcherBundle",
+  "name": "skydiablo/async-event-dispatcher-bundle",
   "description": "Handle all your events in an asyncron way",
   "keywords": [
     "event",
