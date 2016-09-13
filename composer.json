@@ -1,6 +1,7 @@
 {
   "name": "skydiablo/async-event-dispatcher-bundle",
   "description": "Handle all your events in an asynchronous way",
+  "type": "symfony-bundle",
   "keywords": [
     "event",
     "async"
