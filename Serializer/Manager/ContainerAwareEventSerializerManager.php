@@ -1,9 +1,9 @@
 <?php
 
 
-namespace AsyncEventDispatcherBundle\Serializer\Manager;
+namespace SkyDiablo\AsyncEventDispatcherBundle\Serializer\Manager;
 
-use AsyncEventDispatcherBundle\Serializer\EventSerializerInterface;
+use SkyDiablo\AsyncEventDispatcherBundle\Serializer\EventSerializerInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;

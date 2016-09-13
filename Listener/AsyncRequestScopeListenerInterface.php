@@ -1,11 +1,11 @@
 <?php
 
 
-namespace AsyncEventDispatcherBundle\Listener;
+namespace SkyDiablo\AsyncEventDispatcherBundle\Listener;
 
 /**
  * Interface AsyncRequestScopeListenerInterface
- * @package AsyncEventDispatcherBundle\Listener
+ * @package SkyDiablo\AsyncEventDispatcherBundle\Listener
  */
 interface AsyncRequestScopeListenerInterface {
 

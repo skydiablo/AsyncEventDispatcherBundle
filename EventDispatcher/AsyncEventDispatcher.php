@@ -1,7 +1,7 @@
 <?php
 
 
-namespace AsyncEventDispatcherBundle\EventDispatcher;
+namespace SkyDiablo\AsyncEventDispatcherBundle\EventDispatcher;
 
 use Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

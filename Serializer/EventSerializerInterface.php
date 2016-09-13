@@ -1,9 +1,9 @@
 <?php
 
 
-namespace AsyncEventDispatcherBundle\Serializer;
+namespace SkyDiablo\AsyncEventDispatcherBundle\Serializer;
 
-use AsyncEventDispatcherBundle\Queue\QueueItemInterface;
+use SkyDiablo\AsyncEventDispatcherBundle\Queue\QueueItemInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 

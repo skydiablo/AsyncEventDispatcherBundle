@@ -1,12 +1,12 @@
 services:
     #============ DISPATCHER =============
     async_event_dispatcher:
-        class: AsyncEventDispatcherBundle\EventDispatcher\AsyncEventDispatcher
+        class: SkyDiablo\AsyncEventDispatcherBundle\EventDispatcher\AsyncEventDispatcher
         arguments:
             - '@service_container'
 
     async_collector_event_dispatcher:
-        class: AsyncEventDispatcherBundle\EventDispatcher\AsyncCollectorEventDispatcher
+        class: SkyDiablo\AsyncEventDispatcherBundle\EventDispatcher\AsyncCollectorEventDispatcher
         arguments:
             - ~ #queue: override by AsyncEventDispatcherExtension
             - '@service_container'
@@ -19,4 +19,4 @@ services:
 
     #============ SERIALIZER =============
     async_event_dispatcher.serializer_manager.container_aware_event_serializer_manager:
-        class: AsyncEventDispatcherBundle\Serializer\Manager\ContainerAwareEventSerializerManager
+        class: SkyDiablo\AsyncEventDispatcherBundle\Serializer\Manager\ContainerAwareEventSerializerManager

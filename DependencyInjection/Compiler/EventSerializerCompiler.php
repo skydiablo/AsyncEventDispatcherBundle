@@ -1,8 +1,8 @@
 <?php
 
-namespace AsyncEventDispatcherBundle\DependencyInjection\Compiler;
+namespace SkyDiablo\AsyncEventDispatcherBundle\DependencyInjection\Compiler;
 
-use AsyncEventDispatcherBundle\Serializer\Manager\ContainerAwareEventSerializerManager;
+use SkyDiablo\AsyncEventDispatcherBundle\Serializer\Manager\ContainerAwareEventSerializerManager;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;

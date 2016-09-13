@@ -1,14 +1,14 @@
 <?php
 
 
-namespace AsyncEventDispatcherBundle\EventDispatcher;
+namespace SkyDiablo\AsyncEventDispatcherBundle\EventDispatcher;
 
-use AsyncEventDispatcherBundle\Event\AsyncEventInterface;
-use AsyncEventDispatcherBundle\Event\AsyncRequestScopeEventInterface;
-use AsyncEventDispatcherBundle\Queue\QueueInterface;
-use AsyncEventDispatcherBundle\Queue\QueueItemInterface;
-use AsyncEventDispatcherBundle\Queue\RequestScopeQueueItem;
-use AsyncEventDispatcherBundle\Serializer\Manager\EventSerializerManagerInterface;
+use SkyDiablo\AsyncEventDispatcherBundle\Event\AsyncEventInterface;
+use SkyDiablo\AsyncEventDispatcherBundle\Event\AsyncRequestScopeEventInterface;
+use SkyDiablo\AsyncEventDispatcherBundle\Queue\QueueInterface;
+use SkyDiablo\AsyncEventDispatcherBundle\Queue\QueueItemInterface;
+use SkyDiablo\AsyncEventDispatcherBundle\Queue\RequestScopeQueueItem;
+use SkyDiablo\AsyncEventDispatcherBundle\Serializer\Manager\EventSerializerManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\Event;

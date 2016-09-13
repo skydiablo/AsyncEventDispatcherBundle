@@ -1,8 +1,8 @@
 <?php
 
-namespace AsyncEventDispatcherBundle\DependencyInjection;
+namespace SkyDiablo\AsyncEventDispatcherBundle\DependencyInjection;
 
-use AsyncEventDispatcherBundle\Queue\AWSSQSQueue;
+use SkyDiablo\AsyncEventDispatcherBundle\Queue\AWSSQSQueue;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Definition;

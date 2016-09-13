@@ -26,7 +26,7 @@ file of your project:
         {
             $bundles = array(
                 // ...
-                new AsyncEventDispatcherBundle\AsyncEventDispatcherBundle(),
+                new SkyDiablo\AsyncEventDispatcherBundle\AsyncEventDispatcherBundle(),
             );
 
             // ...
@@ -55,11 +55,11 @@ D) Usage
     
             services:
                 your_custom_serializer:
-                    class: AsyncEventDispatcherBundle\Serializer\GenericEventSerializer
+                    class: SkyDiablo\AsyncEventDispatcherBundle\Serializer\GenericEventSerializer
                     tags:
                         - { name: async_event_serializer, event: your_simple_event_name }
 
-  * a more tricky event with complex objects in it or doctrine entitys, needs a custom event serializer. it is in your hand how to serialize and deserialize the event data. create your serializer and implement `AsyncEventDispatcherBundle\Serializer\EventSerializerInterface` interface. define this new serializer in known style. 
+  * a more tricky event with complex objects in it or doctrine entitys, needs a custom event serializer. it is in your hand how to serialize and deserialize the event data. create your serializer and implement `SkyDiablo\AsyncEventDispatcherBundle\Serializer\EventSerializerInterface` interface. define this new serializer in known style. 
               
   for now on, all you listener/subscriber as tagged for async handling will run in an async scope. beware, events without serializer will be ignored and never handled!   
  * the core of the async event handling is an CLI command. run this command in an cycle interval (like cronjob):
@@ -88,7 +88,7 @@ In some situations, you need the request scope of triggering the event? this mea
      
 there are some simple solutions:
 
- * implement `AsyncEventDispatcherBundle\Event\AsyncRequestScopeEventInterface` interface in your custom event
+ * implement `SkyDiablo\AsyncEventDispatcherBundle\Event\AsyncRequestScopeEventInterface` interface in your custom event
  * define request scope in subscriber config:
   
         class ExceptionSubscriber implements EventSubscriberInterface
@@ -115,6 +115,6 @@ there are some simple solutions:
                      
 at the other hand, maybe there is no way to handle an event async? just implement this interface:
 
-        \AsyncEventDispatcherBundle\Event\AsyncEventInterface
+        \SkyDiablo\AsyncEventDispatcherBundle\Event\AsyncEventInterface
         
 and return at function `isAllowAsync` a "false" value. so this event will never be called async!

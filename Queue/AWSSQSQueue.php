@@ -1,7 +1,7 @@
 <?php
 
 
-namespace AsyncEventDispatcherBundle\Queue;
+namespace SkyDiablo\AsyncEventDispatcherBundle\Queue;
 
 use Aws\Sqs\SqsClient;
 use Psr\Log\LoggerInterface;

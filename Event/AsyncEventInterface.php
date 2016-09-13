@@ -1,7 +1,7 @@
 <?php
 
 
-namespace AsyncEventDispatcherBundle\Event;
+namespace SkyDiablo\AsyncEventDispatcherBundle\Event;
 
 
 interface AsyncEventInterface {

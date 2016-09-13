@@ -1,13 +1,13 @@
 <?php
 
 
-namespace AsyncEventDispatcherBundle\Command;
+namespace SkyDiablo\AsyncEventDispatcherBundle\Command;
 
-use AsyncEventDispatcherBundle\AsyncEventDispatcherBundle;
-use AsyncEventDispatcherBundle\DependencyInjection\AsyncEventDispatcherExtension;
-use AsyncEventDispatcherBundle\Queue\QueueInterface;
-use AsyncEventDispatcherBundle\Queue\RequestScopeQueueItemInterface;
-use AsyncEventDispatcherBundle\Serializer\Manager\EventSerializerManagerInterface;
+use SkyDiablo\AsyncEventDispatcherBundle\AsyncEventDispatcherBundle;
+use SkyDiablo\AsyncEventDispatcherBundle\DependencyInjection\AsyncEventDispatcherExtension;
+use SkyDiablo\AsyncEventDispatcherBundle\Queue\QueueInterface;
+use SkyDiablo\AsyncEventDispatcherBundle\Queue\RequestScopeQueueItemInterface;
+use SkyDiablo\AsyncEventDispatcherBundle\Serializer\Manager\EventSerializerManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;

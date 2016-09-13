@@ -1,6 +1,6 @@
 <?php
 
-namespace AsyncEventDispatcherBundle\Queue;
+namespace SkyDiablo\AsyncEventDispatcherBundle\Queue;
 
 use Symfony\Component\HttpFoundation\Request;
 

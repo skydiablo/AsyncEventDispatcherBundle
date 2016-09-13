@@ -1,6 +1,6 @@
 {
   "name": "skydiablo/async-event-dispatcher-bundle",
-  "description": "Handle all your events in an asyncron way",
+  "description": "Handle all your events in an asynchronous way",
   "keywords": [
     "event",
     "async"
@@ -21,11 +21,7 @@
   },
   "autoload": {
     "psr-4": {
-      "skydiablo\\AsyncEventDispatcherBundle\\": ""
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
+      "SkyDiablo\\AsyncEventDispatcherBundle\\": ""
     }
   },
   "config": {

@@ -1,11 +1,11 @@
 <?php
 
-namespace AsyncEventDispatcherBundle\Event;
+namespace SkyDiablo\AsyncEventDispatcherBundle\Event;
 
 /**
  * Interface AsyncRequestScopeEventInterface
  * By implement this Interface, the event force to publish the current request in async listener
- * @package AsyncEventDispatcherBundle\Event
+ * @package SkyDiablo\AsyncEventDispatcherBundle\Event
  */
 interface AsyncRequestScopeEventInterface {
 

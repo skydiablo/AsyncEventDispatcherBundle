@@ -1,9 +1,9 @@
 <?php
 
 
-namespace AsyncEventDispatcherBundle\Serializer\Manager;
+namespace SkyDiablo\AsyncEventDispatcherBundle\Serializer\Manager;
 
-use AsyncEventDispatcherBundle\Serializer\EventSerializerInterface;
+use SkyDiablo\AsyncEventDispatcherBundle\Serializer\EventSerializerInterface;
 
 
 /**

@@ -1,9 +1,9 @@
 <?php
 
-namespace AsyncEventDispatcherBundle;
+namespace SkyDiablo\AsyncEventDispatcherBundle;
 
-use AsyncEventDispatcherBundle\DependencyInjection\Compiler\EventSerializerCompiler;
-use AsyncEventDispatcherBundle\DependencyInjection\Compiler\RegisterListenerCompiler;
+use SkyDiablo\AsyncEventDispatcherBundle\DependencyInjection\Compiler\EventSerializerCompiler;
+use SkyDiablo\AsyncEventDispatcherBundle\DependencyInjection\Compiler\RegisterListenerCompiler;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
