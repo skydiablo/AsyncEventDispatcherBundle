@@ -26,7 +26,7 @@ file of your project:
         {
             $bundles = array(
                 // ...
-                new skydiablo\AsyncEventDispatcherBundle\AsyncEventDispatcherBundle(),
+                new AsyncEventDispatcherBundle\AsyncEventDispatcherBundle(),
             );
 
             // ...
