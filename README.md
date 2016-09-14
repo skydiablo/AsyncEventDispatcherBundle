@@ -53,13 +53,57 @@ D) Usage
 * Publish your event serializer
   * For simple and static events, just use the `GenericEventSerializer`. Define your serializer for events like this:
     
-            services:
-                your_custom_serializer:
-                    class: SkyDiablo\AsyncEventDispatcherBundle\Serializer\GenericEventSerializer
-                    tags:
-                        - { name: async_event_serializer, event: your_simple_event_name }
+          services:
+              your_custom_serializer:
+                  class: SkyDiablo\AsyncEventDispatcherBundle\Serializer\GenericEventSerializer
+                  tags:
+                      - { name: async_event_serializer, event: your_simple_event_name }
 
   * Trickier events with complex objects or doctrine entities need a custom event serializer. You can choose how you want to serialize and deserialize the event data. Create your serializer and implement the `SkyDiablo\AsyncEventDispatcherBundle\Serializer\EventSerializerInterface` interface. Define this new serializer as explained above.
+  
+          class FooEventSerializer implements EventSerializerInterface
+          {
+          
+              /**
+               * @var FooRepository
+               */
+              private $fooRepository;
+          
+              /**
+               * FooEventSerializer constructor.
+               * @param FooRepository $fooRepository
+               */
+              public function __construct(FooRepository $fooRepository)
+              {
+                  $this->fooRepository = $fooRepository;
+              }
+          
+              /**
+               * @param Event $event
+               * @param string $eventName
+               * @return QueueItemInterface
+               */
+              public function serialize(Event $event, $eventName)
+              {
+                  if ($event instanceof FooEvent) {
+                      return $event->getFoo()->getId(); // just serialize the entity id
+                  }
+              }
+          
+              /**
+               * @param QueueItemInterface $queueItem
+               * @return Event
+               */
+              public function deserialize(QueueItemInterface $queueItem)
+              {
+                  $snapId = (int)$queueItem->getData(); // "getData()" contains the result from serialize function
+                  if($fooId) { // a valid number greater zero? 
+                      if($foo = $this->fooRepository->getById($fooId)) { // try to load foo entity by id
+                          return new FooEvent($foo); // create the event object that will be triggered async
+                      }
+                  }
+              }
+          }
               
   From now on, all your listeners/subscribers which are tagged for async handling will run in an async scope. Attention: events without serializers will be ignored and are never handled!   
  * The core of the async event handling is a CLI command. Run this command in cyclic interval (i. e. cronjob-style):
