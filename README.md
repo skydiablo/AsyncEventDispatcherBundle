@@ -86,7 +86,7 @@ D) Usage
               public function serialize(Event $event, $eventName)
               {
                   if ($event instanceof FooEvent) {
-                      return $event->getFoo()->getId(); // just serialize the entity id
+                      return new QueueItem($eventName, $event->getFoo()->getId()); // just serialize the entity id
                   }
               }
           
