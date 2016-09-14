@@ -1,11 +1,11 @@
 # AsyncEventDispatcher
 
-An easy way to use asyncron event handling as symfony bundle. Just create and handle all your existing or new events in an async style. Define your event handler as usual and run in an async scope.
+The AsyncEventDispatcher is a symfony bundle that provides an easy way for asynchronous event handling. Handle all your existing or new events in an async style. Just define your event handler as usual and run it in an async scope.
 
-A) Download the Bundle
+A) Downloading the Bundle
 ----------------------
 
-Open a command console, enter your project directory and execute the
+Open your command line, navigate to your project directory and execute the
 following command to download the latest stable version of this bundle:
 
     $ composer require skydiablo/async-event-bundle
@@ -13,10 +13,10 @@ following command to download the latest stable version of this bundle:
 This command requires you to have Composer installed globally, as explained
 in the [installation chapter of the Composer documentation](https://getcomposer.org/).
 
-B) Enable the Bundle
+B) Enabling the Bundle
 --------------------
 
-Then, enable the bundle by adding the following line in the ``app/AppKernel.php``
+Enable the bundle by adding the following line in the ``app/AppKernel.php``
 file of your project:
 
     // app/AppKernel.php
@@ -33,25 +33,25 @@ file of your project:
         }
     }
 
-C) Configure
+C) Configuring the Bundle
 ----------------------
-For queueing the events, there is currently only one implemented: AWS SQS! if you need another solution (like DB or so on, make an PR!)
+There's currently only one event queue implemented: Amazon AWS SQS. If you need another one, feel free to implement it and make a pull request.
 
     async_event_dispatcher:
         queue:
             awssqs:
                 queue_url: http://...AWS...QUEUE...URL
-                long_polling_timeout: 10 # some seconds...
+                long_polling_timeout: 10 # some time in seconds...
                 sqs_client: aws_sqs_client_service_name
 
 D) Usage
 ----------------------
 
 * Just create your events and listener like documented [here](http://symfony.com/doc/current/event_dispatcher.html)
-* tag your listener instead of `kernel.event_listener` just like this: `kernel.event_listener.async`
-  * same way for subscriber: `kernel.event_subscriber.async`
-* publish your event serializer
-  * for simple and static events, just use the `GenericEventSerializer`. define your serializer for events like this way:
+* Instead of tagging your listener like this: `kernel.event_listener`, just add the '.async' suffix: `kernel.event_listener.async`
+  * The same applies to subscriber tagging: `kernel.event_subscriber.async`
+* Publish your event serializer
+  * For simple and static events, just use the `GenericEventSerializer`. Define your serializer for events like this:
     
             services:
                 your_custom_serializer:
@@ -59,37 +59,37 @@ D) Usage
                     tags:
                         - { name: async_event_serializer, event: your_simple_event_name }
 
-  * a more tricky event with complex objects in it or doctrine entitys, needs a custom event serializer. it is in your hand how to serialize and deserialize the event data. create your serializer and implement `SkyDiablo\AsyncEventDispatcherBundle\Serializer\EventSerializerInterface` interface. define this new serializer in known style. 
+  * Trickier events with complex objects or doctrine entities need a custom event serializer. You can choose how you want to serialize and deserialize the event data. Create your serializer and implement the `SkyDiablo\AsyncEventDispatcherBundle\Serializer\EventSerializerInterface` interface. Define this new serializer as explained above.
               
-  for now on, all you listener/subscriber as tagged for async handling will run in an async scope. beware, events without serializer will be ignored and never handled!   
- * the core of the async event handling is an CLI command. run this command in an cycle interval (like cronjob):
+  From now on, all your listeners/subscribers which are tagged for async handling will run in an async scope. Attention: events without serializers will be ignored and are never handled!   
+ * The core of the async event handling is a CLI command. Run this command in cyclic interval (i. e. cronjob-style):
 
             $ php bin/console async_event_dispatcher --iterate-amount 5
        
-   this command will handle 5 events in this run, default are 10 events.
+   This command will handle 5 events in this run, the default is set to handle 10 events in one run.
    
-thats it!  
+Thats it!  
 
 E) Extra
 ----------------------
-In some situations, you need the request scope of triggering the event? this mean, you can get the current request in async event handler.
+In some situations you might need the scope of the request where the event was thrown. To use the scope of that request in the async event handler, do the following:
 
     /**
-     * injected in some propper ways
+     * Inject in a propper way
      * @var \Symfony\Component\HttpFoundation\RequestStack
      */
     private $requestStack;
 
     public function someEventHandler(YourEvent $event) {
-        // so you can request the current request in async event handler!
+        // You can request the current request in the async event handler like this
         $currentRequest = $this->requestStack->getCurrentRequest();
     }
     
      
-there are some simple solutions:
+There are some simple solutions:
 
- * implement `SkyDiablo\AsyncEventDispatcherBundle\Event\AsyncRequestScopeEventInterface` interface in your custom event
- * define request scope in subscriber config:
+ * Implement the `SkyDiablo\AsyncEventDispatcherBundle\Event\AsyncRequestScopeEventInterface` interface in your custom event
+ * Define request scope in the subscriber config:
   
         class ExceptionSubscriber implements EventSubscriberInterface
         {
@@ -98,23 +98,23 @@ there are some simple solutions:
               // return the subscribed events, their methods and priorities
               return array(
                  KernelEvents::EXCEPTION => array(
-                     array('processException', 10, true), // the third parameter "true" activate the request scope
+                     array('processException', 10, true), // The third parameter "true" activates the request scope
                  )
               );
           }
- * define request scope in event listener tag:
+ * Define the request scope within the event listener tag:
  
          # app/config/services.yml
          services:
              app.exception_listener:
                  class: AppBundle\EventListener\ExceptionListener
                  tags:
-                     # set "async-request" to "true/false"
+                     # set "async-request" to "true" or "false"
                      - { name: kernel.event_listener.async, event: kernel.exception, async-request: true }
                      
                      
-at the other hand, maybe there is no way to handle an event async? just implement this interface:
+What if you can't or don't want to handle an event asynchronously? Just implement this interface:
 
         \SkyDiablo\AsyncEventDispatcherBundle\Event\AsyncEventInterface
         
-and return at function `isAllowAsync` a "false" value. so this event will never be called async!
+and return "false" at the `isAllowAsync` function. Then this event will never be called asynchronously!
