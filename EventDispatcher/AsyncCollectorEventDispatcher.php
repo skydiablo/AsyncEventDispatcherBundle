@@ -83,6 +83,7 @@ class AsyncCollectorEventDispatcher extends BaseEventDispatcher
                             $queueItem = $this->assignCurrentRequest($eventName, $event, $queueItem);
                             $this->queue->add($queueItem);
                         } else {
+                            // todo: maybe we can create an new QueueItem? all except null ?
                             $this->logger->warning(sprintf('EventSerializer "%s" does not return a %s object', $eventName, QueueItemInterface::class), [$eventName, $event]);
                         }
                     } catch (\Exception $e) {
