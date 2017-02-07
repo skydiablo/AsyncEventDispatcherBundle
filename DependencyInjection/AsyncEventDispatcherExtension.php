@@ -48,7 +48,7 @@ class AsyncEventDispatcherExtension extends Extension
                     if (isset($queueConfig['long_polling_timeout'])) {
                         $queueDefinition->addMethodCall('setLongPollingTimeout', [$queueConfig['long_polling_timeout']]);
                     }
-                    break;
+                    break 2;
                 case 'memory':
                     $queueDefinition = new Definition();
                     $queueDefinition->setClass(MemoryQueue::class);
@@ -59,7 +59,7 @@ class AsyncEventDispatcherExtension extends Extension
                     $terminateListener->addArgument(new Reference('async_event_dispatcher.service.queue_worker'));
                     $terminateListener->addTag('kernel.event_subscriber');
                     $container->setDefinition('async_event_dispatcher.terminate_listener', $terminateListener);
-                    break;
+                    break 2;
             }
         }
         if (!$queueDefinition) {
