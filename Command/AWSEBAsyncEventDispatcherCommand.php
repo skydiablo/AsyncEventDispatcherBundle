@@ -18,8 +18,9 @@ class AWSEBAsyncEventDispatcherCommand extends SingleInstanceCommand
 {
 
     const COMMAND_NAME = 'aws_eb_async_event_dispatcher';
-    const OPTION_ITERATE_AMOUNT = 'iterate-amount';
     const DEFAULT_ITERATE_AMOUNT = 10;
+    const OPTION_ITERATE_AMOUNT = 'iterate-amount';
+    const OPTION_SLEEP = 'sleep';
 
     /**
      * @var LoggerInterface
@@ -29,8 +30,10 @@ class AWSEBAsyncEventDispatcherCommand extends SingleInstanceCommand
     protected function configure()
     {
         parent::configure();
-        $this->setName(self::COMMAND_NAME);
-        $this->addOption(self::OPTION_ITERATE_AMOUNT, null, InputOption::VALUE_OPTIONAL, null, self::DEFAULT_ITERATE_AMOUNT);
+        $this
+            ->setName(self::COMMAND_NAME)
+            ->addOption(self::OPTION_ITERATE_AMOUNT, null, InputOption::VALUE_OPTIONAL, null, self::DEFAULT_ITERATE_AMOUNT)
+            ->addOption(self::OPTION_SLEEP, null, InputOption::VALUE_OPTIONAL, null, 60);
     }
 
     protected function initialize(InputInterface $input, OutputInterface $output)
@@ -46,10 +49,18 @@ class AWSEBAsyncEventDispatcherCommand extends SingleInstanceCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $sleep = (int)$input->getOption(self::OPTION_SLEEP) ?: 60;
         /** @var QueueWorkerService $queueWorkerService */
         $queueWorkerService = $this->getContainer()->get('async_event_dispatcher.service.queue_worker');
+        $longRunCleaner = $this->getContainer()->get('long_running.delegating_cleaner');
         try {
-            $queueWorkerService->run((int)$input->getOption(self::OPTION_ITERATE_AMOUNT) ?: self::DEFAULT_ITERATE_AMOUNT);
+            while (true) {
+                $result = $queueWorkerService->run((int)$input->getOption(self::OPTION_ITERATE_AMOUNT) ?: self::DEFAULT_ITERATE_AMOUNT);
+                if (!$result) {
+                    sleep($sleep);
+                }
+                $longRunCleaner->cleanUp();
+            }
         } catch (\Exception $e) {
             $this->logger->error(sprintf('[ERROR] While execute "%s" command: %s', $this->getName(), $e->getMessage()), [$e]);
         }
