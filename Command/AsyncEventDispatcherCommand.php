@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Description for class AsyncEventDispatcherCommand
@@ -16,7 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class AsyncEventDispatcherCommand extends ContainerAwareCommand
 {
 
-    const COMMAND_NAME = 'aws_eb_async_event_dispatcher';
+    const COMMAND_NAME = 'async_event_dispatcher';
     const DEFAULT_ITERATE_AMOUNT = 10;
     const OPTION_ITERATE_AMOUNT = 'iterate-amount';
     const OPTION_SLEEP = 'sleep';
@@ -51,14 +52,14 @@ class AsyncEventDispatcherCommand extends ContainerAwareCommand
         $sleep = (int)$input->getOption(self::OPTION_SLEEP) ?: 60;
         /** @var QueueWorkerService $queueWorkerService */
         $queueWorkerService = $this->getContainer()->get('async_event_dispatcher.service.queue_worker');
-        $longRunCleaner = $this->getContainer()->get('long_running.delegating_cleaner');
+        $longRunCleaner = $this->getContainer()->get('long_running.delegating_cleaner', ContainerInterface::NULL_ON_INVALID_REFERENCE);
         try {
             while (true) {
                 $result = $queueWorkerService->run((int)$input->getOption(self::OPTION_ITERATE_AMOUNT) ?: self::DEFAULT_ITERATE_AMOUNT);
                 if (!$result) {
                     sleep($sleep);
                 }
-                $longRunCleaner->cleanUp();
+                $longRunCleaner ? $longRunCleaner->cleanUp() : null;
             }
         } catch (\Exception $e) {
             $this->logger->error(sprintf('[ERROR] While execute "%s" command: %s', $this->getName(), $e->getMessage()), [$e]);

@@ -60,7 +60,7 @@ class AWSEBAsyncEventDispatcherCommand extends SingleInstanceCommand
                 if (!$result) {
                     sleep($sleep);
                 }
-                $longRunCleaner ?? $longRunCleaner->cleanUp();
+                $longRunCleaner ? $longRunCleaner->cleanUp() : null;
             }
         } catch (\Exception $e) {
             $this->logger->error(sprintf('[ERROR] While execute "%s" command: %s', $this->getName(), $e->getMessage()), [$e]);
