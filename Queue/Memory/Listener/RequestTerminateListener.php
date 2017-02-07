@@ -44,7 +44,7 @@ class RequestTerminateListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::TERMINATE, 'onTerminate',
+            KernelEvents::TERMINATE => 'onTerminate',
         ];
     }
 }
