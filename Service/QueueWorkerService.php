@@ -72,10 +72,12 @@ class QueueWorkerService
 
     /**
      * @param int $iterations
+     * @return bool
      */
     public function run(int $iterations)
     {
-        foreach ($this->queue->pull($iterations) AS $queueItem) {
+        $queueItems = $this->queue->pull($iterations);
+        foreach ($queueItems AS $queueItem) {
             try {
                 if ($queueItem instanceof RequestScopeQueueItemInterface) {
                     $this->enterRequestScope($queueItem);
@@ -99,6 +101,7 @@ class QueueWorkerService
                 }
             }
         }
+        return (bool)count($queueItems);
     }
 
     /**

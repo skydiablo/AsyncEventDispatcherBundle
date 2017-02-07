@@ -30,3 +30,7 @@ services:
             - '@logger'
             - '@async_event_dispatcher.serializer_manager.container_aware_event_serializer_manager'
             - '@async_event_dispatcher'
+
+    #============ EVENT LISTENER =============
+    async_event_dispatcher.queue_memory_listener.request_terminate_listener:
+        class: SkyDiablo\AsyncEventDispatcherBundle\Queue\Memory\Listener\RequestTerminateListener

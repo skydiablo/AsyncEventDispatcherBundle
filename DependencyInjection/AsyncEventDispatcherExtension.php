@@ -48,6 +48,10 @@ class AsyncEventDispatcherExtension extends Extension
                 case 'memory':
                     $queueDefinition = new Definition();
                     $queueDefinition->setClass(MemoryQueue::class);
+
+                    // activate event listener/subscriber
+                    $terminateListener = $container->getDefinition('async_event_dispatcher.queue_memory_listener.request_terminate_listener');
+                    $terminateListener->addTag('kernel.event_subscriber');
                     break;
             }
         }
