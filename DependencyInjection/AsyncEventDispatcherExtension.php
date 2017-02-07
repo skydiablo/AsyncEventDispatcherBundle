@@ -50,6 +50,9 @@ class AsyncEventDispatcherExtension extends Extension
                     }
                     break 2;
                 case 'memory':
+                    if (!($queueConfig['enabled'] ?? false)) {
+                        break;
+                    }
                     $queueDefinition = new Definition();
                     $queueDefinition->setClass(MemoryQueue::class);
 

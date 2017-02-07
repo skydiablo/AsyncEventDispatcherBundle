@@ -23,6 +23,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->arrayNode('queue')
+                    ->performNoDeepMerging()
                     ->children()
                         ->arrayNode('awssqs')
                             ->children()
