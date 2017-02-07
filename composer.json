@@ -16,7 +16,8 @@
   "require": {
     "php": ">=7.0",
     "aws/aws-sdk-php": "^3.19",
-    "symfony/event-dispatcher": "^3.1"
+    "symfony/event-dispatcher": "^3.1",
+    "skydiablo/aws-bundle": "^1.0"
   },
   "require-dev": {
   },

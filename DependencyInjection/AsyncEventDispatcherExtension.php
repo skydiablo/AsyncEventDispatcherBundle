@@ -16,14 +16,16 @@ use Symfony\Component\DependencyInjection\Loader;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class AsyncEventDispatcherExtension extends Extension {
+class AsyncEventDispatcherExtension extends Extension
+{
 
     const QUEUE_SERVICE_NAME = 'async_event_dispatcher.queue';
 
     /**
      * {@inheritdoc}
      */
-    public function load(array $configs, ContainerBuilder $container) {
+    public function load(array $configs, ContainerBuilder $container)
+    {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
@@ -60,5 +62,8 @@ class AsyncEventDispatcherExtension extends Extension {
 
         $asyncEventDispatcher = $container->getDefinition('async_collector_event_dispatcher');
         $asyncEventDispatcher->replaceArgument(0, new Reference(self::QUEUE_SERVICE_NAME)); //override first constructor argument
+
+        $queueWorkerService = $container->getDefinition('async_event_dispatcher.service.queue_worker');
+        $queueWorkerService->replaceArgument(0, new Reference(self::QUEUE_SERVICE_NAME)); //override first constructor argument
     }
 }

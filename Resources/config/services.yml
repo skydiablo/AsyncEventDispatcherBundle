@@ -20,3 +20,13 @@ services:
     #============ SERIALIZER =============
     async_event_dispatcher.serializer_manager.container_aware_event_serializer_manager:
         class: SkyDiablo\AsyncEventDispatcherBundle\Serializer\Manager\ContainerAwareEventSerializerManager
+
+    #============ SERVICES =============
+    async_event_dispatcher.service.queue_worker:
+        class: SkyDiablo\AsyncEventDispatcherBundle\Service\QueueWorkerService
+        arguments:
+            - ~ #queue: override by AsyncEventDispatcherExtension
+            - '@request_stack'
+            - '@logger'
+            - '@async_event_dispatcher.serializer_manager.container_aware_event_serializer_manager'
+            - '@async_event_dispatcher'

@@ -3,20 +3,12 @@
 
 namespace SkyDiablo\AsyncEventDispatcherBundle\Command;
 
-use SkyDiablo\AsyncEventDispatcherBundle\AsyncEventDispatcherBundle;
-use SkyDiablo\AsyncEventDispatcherBundle\DependencyInjection\AsyncEventDispatcherExtension;
-use SkyDiablo\AsyncEventDispatcherBundle\Queue\QueueInterface;
-use SkyDiablo\AsyncEventDispatcherBundle\Queue\RequestScopeQueueItemInterface;
-use SkyDiablo\AsyncEventDispatcherBundle\Serializer\Manager\EventSerializerManagerInterface;
 use Psr\Log\LoggerInterface;
+use SkyDiablo\AsyncEventDispatcherBundle\Service\QueueWorkerService;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\EventDispatcher\Event;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Description for class AsyncEventDispatcherCommand
@@ -27,11 +19,6 @@ class AsyncEventDispatcherCommand extends ContainerAwareCommand
     const COMMAND_NAME = 'async_event_dispatcher';
     const OPTION_ITERATE_AMOUNT = 'iterate-amount';
     const DEFAULT_ITERATE_AMOUNT = 10;
-
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
 
     /**
      * @var LoggerInterface
@@ -49,67 +36,24 @@ class AsyncEventDispatcherCommand extends ContainerAwareCommand
     {
         parent::initialize($input, $output);
         $this->logger = $this->getContainer()->get('logger');
-        $this->requestStack = $this->getContainer()->get('request_stack');
     }
 
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return int|null|void
+     * @return int
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
-        /** @var QueueInterface $queue */
-        $queue = $this->getContainer()->get(AsyncEventDispatcherExtension::QUEUE_SERVICE_NAME);
-        /** @var EventSerializerManagerInterface $eventSerializerManager */
-        $eventSerializerManager = $this->getContainer()->get('async_event_dispatcher.serializer_manager.container_aware_event_serializer_manager');
-        /** @var EventDispatcherInterface $eventDispatcher */
-        $eventDispatcher = $this->getContainer()->get(AsyncEventDispatcherBundle::SERVICE_ASYNC_EVENT_DISPATCHER);
-
-        foreach ($queue->pull((int)$input->getOption(self::OPTION_ITERATE_AMOUNT) ?: self::DEFAULT_ITERATE_AMOUNT) AS $queueItem) {
-            try {
-                if ($queueItem instanceof RequestScopeQueueItemInterface) {
-                    $this->enterRequestScope($queueItem);
-                }
-                $eventName = $queueItem->getEventName();
-                if ($eventSerializerManager->has($eventName)) {
-                    $eventSerializer = $eventSerializerManager->get($eventName);
-                    $event = $eventSerializer->deserialize($queueItem);
-                    if ($event instanceof Event) {
-                        $eventDispatcher->dispatch($eventName, $event);
-                    } else {
-                        $this->logger->warning(sprintf('Given EventSerializer "%s" does not hydrate a valid event object', $eventName), [$eventSerializer, $queueItem->getData()]);
-                    }
-                } else {
-                    $this->logger->warning(sprintf('No EventSerializer for "%s" available', $eventName));
-                }
-            } catch (\Exception $e) {
-                $this->logger->error(sprintf('[ERROR] While execute "%s" command: %s', $this->getName(), $e->getMessage()), [$e, $queueItem]);
-            } finally {
-                $queue->remove($queueItem); //always delete item from queue
-                if ($queueItem instanceof RequestScopeQueueItemInterface) {
-                    $this->leaveRequestScope();
-                }
-            }
+        /** @var QueueWorkerService $queueWorkerService */
+        $queueWorkerService = $this->getContainer()->get('async_event_dispatcher.service.queue_worker');
+        try {
+            $queueWorkerService->run((int)$input->getOption(self::OPTION_ITERATE_AMOUNT) ?: self::DEFAULT_ITERATE_AMOUNT);
+        } catch (\Exception $e) {
+            $this->logger->error(sprintf('[ERROR] While execute "%s" command: %s', $this->getName(), $e->getMessage()), [$e]);
         }
         return 0;
     }
 
-    /**
-     * @param RequestScopeQueueItemInterface $queueItem
-     */
-    protected function enterRequestScope(RequestScopeQueueItemInterface $queueItem)
-    {
-        $this->requestStack->push($queueItem->getRequest());
-    }
-
-    /**
-     * @return null|Request
-     */
-    protected function leaveRequestScope()
-    {
-        return $this->requestStack->pop();
-    }
 
 }
