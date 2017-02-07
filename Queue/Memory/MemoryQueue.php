@@ -31,7 +31,7 @@ class MemoryQueue implements QueueInterface
      */
     public function pull($maxCount = 10)
     {
-        return array_splice($this->queue, 0, max((int)$maxCount), 1);
+        return array_slice($this->queue, 0, max((int)$maxCount, 1));
     }
 
     /**

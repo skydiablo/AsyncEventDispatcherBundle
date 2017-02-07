@@ -48,12 +48,14 @@ class AsyncEventDispatcher extends ContainerAwareEventDispatcher
     public function addSubscriberService($serviceId, $class)
     {
         foreach ($class::getSubscribedEvents() as $eventName => $params) {
-            if (is_string($params[0]) && isset($params[2])) {
-                $this->setNeedRequest($eventName, $params[2]);
-            } else {
-                foreach ($params as $listener) {
-                    if (isset($listener[2]) && $this->setNeedRequest($eventName, $listener)) {
-                        break;
+            if (is_array($params)) {
+                if (is_string($params[0]) && isset($params[2])) {
+                    $this->setNeedRequest($eventName, $params[2]);
+                } else {
+                    foreach ($params as $listener) {
+                        if (isset($listener[2]) && $this->setNeedRequest($eventName, $listener)) {
+                            break;
+                        }
                     }
                 }
             }

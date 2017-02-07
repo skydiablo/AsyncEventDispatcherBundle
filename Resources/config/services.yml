@@ -20,6 +20,8 @@ services:
     #============ SERIALIZER =============
     async_event_dispatcher.serializer_manager.container_aware_event_serializer_manager:
         class: SkyDiablo\AsyncEventDispatcherBundle\Serializer\Manager\ContainerAwareEventSerializerManager
+        calls:
+            - [setContainer, ['@service_container']]
 
     #============ SERVICES =============
     async_event_dispatcher.service.queue_worker:
@@ -30,7 +32,3 @@ services:
             - '@logger'
             - '@async_event_dispatcher.serializer_manager.container_aware_event_serializer_manager'
             - '@async_event_dispatcher'
-
-    #============ EVENT LISTENER =============
-    async_event_dispatcher.queue_memory_listener.request_terminate_listener:
-        class: SkyDiablo\AsyncEventDispatcherBundle\Queue\Memory\Listener\RequestTerminateListener

@@ -3,6 +3,7 @@
 namespace SkyDiablo\AsyncEventDispatcherBundle\DependencyInjection;
 
 use SkyDiablo\AsyncEventDispatcherBundle\Queue\AWSSQS\AWSSQSQueue;
+use SkyDiablo\AsyncEventDispatcherBundle\Queue\Memory\Listener\RequestTerminateListener;
 use SkyDiablo\AsyncEventDispatcherBundle\Queue\Memory\MemoryQueue;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -53,8 +54,11 @@ class AsyncEventDispatcherExtension extends Extension
                     $queueDefinition->setClass(MemoryQueue::class);
 
                     // activate event listener/subscriber
-                    $terminateListener = $container->getDefinition('async_event_dispatcher.queue_memory_listener.request_terminate_listener');
+                    $terminateListener = new Definition();
+                    $terminateListener->setClass(RequestTerminateListener::class);
+                    $terminateListener->addArgument(new Reference('async_event_dispatcher.service.queue_worker'));
                     $terminateListener->addTag('kernel.event_subscriber');
+                    $container->setDefinition('async_event_dispatcher.terminate_listener', $terminateListener);
                     break;
             }
         }
