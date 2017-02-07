@@ -31,6 +31,9 @@ class Configuration implements ConfigurationInterface
                                 ->scalarNode('sqs_client')->end()
                             ->end()
                         ->end()
+                        ->arrayNode('memory')
+                            ->canBeEnabled()
+                        ->end()
                     ->end()
                 ->end()
             ->end();

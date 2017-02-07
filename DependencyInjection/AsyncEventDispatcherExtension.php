@@ -2,7 +2,8 @@
 
 namespace SkyDiablo\AsyncEventDispatcherBundle\DependencyInjection;
 
-use SkyDiablo\AsyncEventDispatcherBundle\Queue\AWSSQSQueue;
+use SkyDiablo\AsyncEventDispatcherBundle\Queue\AWSSQS\AWSSQSQueue;
+use SkyDiablo\AsyncEventDispatcherBundle\Queue\Memory\MemoryQueue;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Definition;
@@ -41,6 +42,10 @@ class AsyncEventDispatcherExtension extends Extension {
                     if (isset($queueConfig['long_polling_timeout'])) {
                         $queueDefinition->addMethodCall('setLongPollingTimeout', [$queueConfig['long_polling_timeout']]);
                     }
+                    break;
+                case 'memory':
+                    $queueDefinition = new Definition();
+                    $queueDefinition->setClass(MemoryQueue::class);
                     break;
             }
         }

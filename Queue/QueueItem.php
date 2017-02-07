@@ -29,10 +29,10 @@ class QueueItem implements QueueItemInterface
      * @param string $eventName
      * @param string $data
      */
-    function __construct($eventName, $data)
+    function __construct($eventName, $data = null)
     {
         $this->eventName = (string)$eventName;
-        $this->data = (string)$data;
+        $this->data = (string)$data ?: null;
     }
 
     /**

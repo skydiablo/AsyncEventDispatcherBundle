@@ -8,7 +8,7 @@ A) Downloading the Bundle
 Open your command line, navigate to your project directory and execute the
 following command to download the latest stable version of this bundle:
 
-    $ composer require skydiablo/async-event-bundle
+    $ composer require skydiablo/async-event-dispatcher-bundle
 
 This command requires you to have Composer installed globally, as explained
 in the [installation chapter of the Composer documentation](https://getcomposer.org/).
@@ -96,7 +96,7 @@ D) Usage
                */
               public function deserialize(QueueItemInterface $queueItem)
               {
-                  $snapId = (int)$queueItem->getData(); // "getData()" contains the result from serialize function
+                  $fooId = (int)$queueItem->getData(); // "getData()" contains the result from serialize function
                   if($fooId) { // a valid number greater zero? 
                       if($foo = $this->fooRepository->getById($fooId)) { // try to load foo entity by id
                           return new FooEvent($foo); // create the event object that will be triggered async
@@ -159,6 +159,6 @@ There are some simple solutions:
                      
 What if you can't or don't want to handle an event asynchronously? Just implement this interface:
 
-        \SkyDiablo\AsyncEventDispatcherBundle\Event\AsyncEventInterface
+        SkyDiablo\AsyncEventDispatcherBundle\Event\AsyncEventInterface
         
 and return "false" at the `isAllowAsync` function. Then this event will never be called asynchronously!
