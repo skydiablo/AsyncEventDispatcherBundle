@@ -20,7 +20,8 @@ class MemoryQueue implements QueueInterface
      */
     public function add(QueueItemInterface $queueItem)
     {
-        $this->queue[] = $queueItem;
+        $key = uniqid();
+        $this->queue[$key] = $queueItem->setQueueIdentifier($key);
         return true;
     }
 
@@ -39,9 +40,7 @@ class MemoryQueue implements QueueInterface
      */
     public function remove(QueueItemInterface $queueItem)
     {
-        $this->queue = array_filter($this->queue, function(QueueItemInterface $existingQueueItem) use ($queueItem) {
-            return $queueItem === $existingQueueItem;
-        });
+        unset($this->queue[$queueItem->getQueueIdentifier()]);
         return true;
     }
 }

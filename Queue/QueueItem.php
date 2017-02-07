@@ -61,11 +61,12 @@ class QueueItem implements QueueItemInterface
 
     /**
      * @param string $queueIdentifier
-     * @return null|void
+     * @return QueueItemInterface
      */
     public function setQueueIdentifier($queueIdentifier)
     {
         $this->queueIdentifier = $queueIdentifier;
+        return $this;
     }
 
 }

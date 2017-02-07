@@ -27,7 +27,7 @@ interface QueueItemInterface
 
     /**
      * @param string $queueIdentifier
-     * @return null
+     * @return QueueItemInterface
      */
     public function setQueueIdentifier($queueIdentifier);
 
