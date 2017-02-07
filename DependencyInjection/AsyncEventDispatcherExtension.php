@@ -29,6 +29,9 @@ class AsyncEventDispatcherExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader->load('services.yml');
+
         $queueDefinition = null;
         foreach ($config['queue'] AS $key => $queueConfig) {
             switch (strtolower($key)) {
@@ -60,9 +63,6 @@ class AsyncEventDispatcherExtension extends Extension
         }
 
         $container->setDefinition(self::QUEUE_SERVICE_NAME, $queueDefinition);
-
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.yml');
 
         $asyncEventDispatcher = $container->getDefinition('async_collector_event_dispatcher');
         $asyncEventDispatcher->replaceArgument(0, new Reference(self::QUEUE_SERVICE_NAME)); //override first constructor argument
