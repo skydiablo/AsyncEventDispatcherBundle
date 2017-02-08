@@ -13,7 +13,8 @@ use SkyDiablo\AsyncEventDispatcherBundle\Queue\QueueItemInterface;
 /**
  * Description for class AWSSQSQueue
  */
-class AWSSQSQueue implements QueueInterface {
+class AWSSQSQueue implements QueueInterface
+{
 
     const AWS_SQS_KEY_QUEUE_URL = 'QueueUrl';
     const AWS_SQS_KEY_RECEIPT_HANDLE = 'ReceiptHandle';
@@ -57,7 +58,8 @@ class AWSSQSQueue implements QueueInterface {
      * @param string $queueUrl
      * @param LoggerInterface $logger
      */
-    function __construct(SqsClient $sqs, $queueUrl, LoggerInterface $logger) {
+    function __construct(SqsClient $sqs, $queueUrl, LoggerInterface $logger)
+    {
         $this->sqs = $sqs;
         $this->queueUrl = (string)$queueUrl;
         $this->isCliMode = php_sapi_name() == 'cli';
@@ -67,14 +69,18 @@ class AWSSQSQueue implements QueueInterface {
     /**
      * destructor trigger all queued events
      */
-    function __destruct() {
+    function __destruct()
+    {
         $this->flushBatch();
     }
 
-    public function flushBatch() {
-        if($this->batch) {
+    public function flushBatch()
+    {
+        if ($this->batch) {
             try {
-                $this->sendBatch($this->batch);
+                while ($subBatch = array_splice($this->batch, 0, 10)) { // max 10 elements per request
+                    $this->sendBatch($subBatch);
+                }
             } catch (\Exception $e) {
                 $this->logger->error(sprintf('Cannot batch queue to aws sqs: %s', $e->getMessage()), [$e, $this]);
             }
@@ -84,14 +90,16 @@ class AWSSQSQueue implements QueueInterface {
     /**
      * @return int
      */
-    public function getLongPollingTimeout() {
+    public function getLongPollingTimeout()
+    {
         return $this->longPollingTimeout;
     }
 
     /**
      * @param int $longPollingTimeout
      */
-    public function setLongPollingTimeout($longPollingTimeout) {
+    public function setLongPollingTimeout($longPollingTimeout)
+    {
         $this->longPollingTimeout = (int)$longPollingTimeout;
     }
 
@@ -99,7 +107,8 @@ class AWSSQSQueue implements QueueInterface {
      * @param QueueItemInterface $queueItem
      * @return bool
      */
-    public function add(QueueItemInterface $queueItem) {
+    public function add(QueueItemInterface $queueItem)
+    {
         $messageBody = base64_encode(gzcompress(serialize($queueItem)));
 
         if ($this->isCliMode) { // fire instantly in CLI mode
@@ -121,7 +130,8 @@ class AWSSQSQueue implements QueueInterface {
      * @param array $messageBodies
      * @return \Aws\Result
      */
-    protected function sendBatch(array $messageBodies) {
+    protected function sendBatch(array $messageBodies)
+    {
         $resultModel = $this->sqs->sendMessageBatch([
             self::AWS_SQS_KEY_QUEUE_URL => $this->queueUrl,
             'Entries' => array_map(function ($messageBody, $key) {
@@ -138,9 +148,11 @@ class AWSSQSQueue implements QueueInterface {
      * @param int $maxCount
      * @return QueueItemInterface[]
      */
-    public function pull($maxCount = 10) {
+    public function pull($maxCount = 10)
+    {
 
         $result = [];
+        $maxCount = min(max(1, $maxCount), 10); // define an valid range between 1-10
 
         try {
             $response = $this->sqs->receiveMessage([
@@ -182,7 +194,8 @@ class AWSSQSQueue implements QueueInterface {
      * @param QueueItemInterface $queueItem
      * @return mixed
      */
-    public function remove(QueueItemInterface $queueItem) {
+    public function remove(QueueItemInterface $queueItem)
+    {
         try {
             $this->sqs->deleteMessage([
                 self::AWS_SQS_KEY_QUEUE_URL => $this->queueUrl,
